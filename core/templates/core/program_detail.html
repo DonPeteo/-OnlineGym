@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<a href="{% url 'program_list' %}" class="text-sm text-zinc-500 hover:text-zinc-900">
+    ← Back to programs
+</a>
+
+<div class="grid md:grid-cols-2 gap-12 items-start mt-8">
+
+    <div>
+        <img
+            src="{{ program.image_url }}"
+            alt="{{ program.title }}"
+            class="w-full rounded-3xl shadow-lg object-cover"
+        >
+    </div>
+
+    <div>
+        <h1 class="text-4xl font-bold tracking-tight mb-4">
+            {{ program.title }}
+        </h1>
+
+        <p class="text-zinc-600 text-lg leading-relaxed mb-6">
+            {{ program.description }}
+        </p>
+
+        <div class="bg-white border border-zinc-100 rounded-2xl p-5 mb-6">
+            <h2 class="font-semibold mb-2">Equipment</h2>
+            <p class="text-zinc-600">
+                {{ program.equipment|default:"No equipment required." }}
+            </p>
+        </div>
+
+        <p class="text-2xl font-semibold mb-6">
+            {{ program.price_eur }} €
+        </p>
+
+        {% if not has_purchased %}
+            <form method="post" action="{% url 'create_checkout_session' program.id %}">
+                {% csrf_token %}
+                <button
+                    type="submit"
+                    class="bg-black text-white px-6 py-3 rounded-xl hover:bg-zinc-800 transition"
+                >
+                    Buy Program
+                </button>
+            </form>
+        {% else %}
+            <p class="inline-block bg-green-100 text-green-700 px-4 py-2 rounded-xl font-medium">
+                Program purchased
+            </p>
+        {% endif %}
+    </div>
+
+</div>
+
+<section class="mt-16">
+    <h2 class="text-3xl font-bold mb-6">Videos</h2>
+
+    <div class="space-y-4">
+        {% for video in program.videos.all %}
+
+            <div class="bg-white border border-zinc-100 rounded-2xl p-5 flex justify-between items-center">
+                <div>
+                    <p class="font-semibold">
+                        {{ video.order }}. {{ video.title }}
+                    </p>
+                </div>
+
+                {% if has_purchased %}
+                    <a
+                        href="{{ video.video_url }}"
+                        target="_blank"
+                        class="bg-black text-white px-4 py-2 rounded-xl hover:bg-zinc-800 transition"
+                    >
+                        Watch Video
+                    </a>
+                {% else %}
+                    <span class="text-zinc-500">
+                        🔒 Locked
+                    </span>
+                {% endif %}
+            </div>
+
+        {% empty %}
+
+            <p class="text-zinc-500">No videos available for this program.</p>
+
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

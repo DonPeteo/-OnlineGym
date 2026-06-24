@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<div class="mb-10">
+    <h1 class="text-4xl font-bold mb-2">
+        All Programs
+    </h1>
+
+    <p class="text-zinc-500">
+        Browse all available workout programs.
+    </p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+    {% for program in programs %}
+
+        <div class="bg-white rounded-2xl shadow-sm border border-zinc-100 overflow-hidden hover:shadow-lg transition">
+
+            <a href="{% url 'program_detail' program.id %}">
+                <img
+                    src="{{ program.image_url }}"
+                    alt="{{ program.title }}"
+                    class="w-full h-64 object-cover"
+                >
+            </a>
+
+            <div class="p-5">
+
+                <h2 class="text-xl font-semibold mb-2">
+                    <a href="{% url 'program_detail' program.id %}">
+                        {{ program.title }}
+                    </a>
+                </h2>
+
+                <p class="text-zinc-500">
+                    {{ program.price_eur }} €
+                </p>
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <p>No programs available.</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

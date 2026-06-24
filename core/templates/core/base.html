@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse Fitness</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-zinc-50 text-zinc-900">
+
+    <nav class="bg-white border-b border-zinc-200">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+
+            <a href="{% url 'program_list' %}" class="font-bold text-xl">
+                Pulse Fitness
+            </a>
+
+            <div>
+
+                {% if user.is_authenticated %}
+
+                    <span class="mr-4">
+                        Welcome {{ user.username }}
+                    </span>
+
+                    <a href="{% url 'my_programs' %}" class="mr-4">
+                        My Programs
+                    </a>
+
+                    <a href="{% url 'password_change' %}" class="mr-4">
+                        Change Password
+                    </a>
+
+                    <form method="post"
+                          action="{% url 'logout' %}"
+                          class="inline">
+                        {% csrf_token %}
+                        <button type="submit">
+                            Logout
+                        </button>
+                    </form>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}" class="mr-4">
+                        Login
+                    </a>
+
+                    <a href="{% url 'register' %}">
+                        Register
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-6">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+    <footer class="border-t border-zinc-200 mt-20">
+        <div class="max-w-6xl mx-auto px-6 py-8 text-sm text-zinc-500 flex flex-col md:flex-row justify-between gap-4">
+            <p>&copy; 2026 Pulse Fitness. All rights reserved.</p>
+    
+            <p>
+                Contact:
+                <a href="mailto:ana@pulsefitness.com" class="text-zinc-900">
+                    ana@pulsefitness.com
+                </a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

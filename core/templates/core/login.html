@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<div class="max-w-md mx-auto mt-16 bg-white border border-zinc-100 rounded-3xl shadow-sm p-8">
+
+    <h1 class="text-3xl font-bold mb-2">Login</h1>
+
+    <p class="text-zinc-500 mb-6">
+        Welcome back. Log in to access your programs.
+    </p>
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button
+            type="submit"
+            class="w-full bg-black text-white py-3 rounded-xl hover:bg-zinc-800 transition"
+        >
+            Login
+        </button>
+    </form>
+
+    <p class="mt-6 text-sm text-zinc-500">
+        Don't have an account?
+        <a href="{% url 'register' %}" class="text-black font-medium">
+            Register
+        </a>
+    </p>
+
+</div>
+
+{% endblock %}
