@@ -34,4 +34,10 @@ urlpatterns = [
     path('password-change/',auth_views.PasswordChangeView.as_view(template_name='core/password_change.html'),name='password_change'),
     path('password-change/done/',auth_views.PasswordChangeDoneView.as_view(template_name='core/password_change_done.html'),name='password_change_done'),
     path('programs/', views.all_programs, name='all_programs'),
+    path('video/<int:id>/',views.watch_video,name='watch_video'),
+    path('programs/home/', views.home_programs, name='home_programs'),
+    path('programs/gym/', views.gym_programs, name='gym_programs'),
+    path('program/<int:id>/wishlist/', views.toggle_wishlist, name='toggle_wishlist'),path('program/<int:id>/wishlist/', views.toggle_wishlist, name='toggle_wishlist'),
+    path('wishlist/', views.wishlist, name='wishlist'),
+    path('stripe/webhook/', views.stripe_webhook, name='stripe_webhook'),
 ]

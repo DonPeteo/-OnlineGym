@@ -2,9 +2,19 @@
 
 {% block content %}
 
-<a href="{% url 'program_list' %}" class="text-sm text-zinc-500 hover:text-zinc-900">
-    ← Back to programs
-</a>
+{% if program.category == 'HOME' %}
+    <a href="{% url 'home_programs' %}" class="text-sm text-zinc-500 hover:text-zinc-900">
+        ← Back to Home Workouts
+    </a>
+{% elif program.category == 'GYM' %}
+    <a href="{% url 'gym_programs' %}" class="text-sm text-zinc-500 hover:text-zinc-900">
+        ← Back to Gym Workouts
+    </a>
+{% else %}
+    <a href="{% url 'all_programs' %}" class="text-sm text-zinc-500 hover:text-zinc-900">
+        ← Back to Programs
+    </a>
+{% endif %}
 
 <div class="grid md:grid-cols-2 gap-12 items-start mt-8">
 
@@ -25,6 +35,25 @@
             {{ program.description }}
         </p>
 
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+            <div class="bg-white border border-zinc-100 rounded-xl p-4">
+                <p class="text-sm text-zinc-500">Category</p>
+                <p class="font-semibold">{{ program.get_category_display }}</p>
+            </div>
+        
+            <div class="bg-white border border-zinc-100 rounded-xl p-4">
+                <p class="text-sm text-zinc-500">Difficulty</p>
+                <p class="font-semibold">{{ program.get_difficulty_display }}</p>
+            </div>
+        
+            <div class="bg-white border border-zinc-100 rounded-xl p-4">
+                <p class="text-sm text-zinc-500">Duration</p>
+                <p class="font-semibold">{{ program.duration_weeks }} weeks</p>
+            </div>
+        
+        </div>
+
         <div class="bg-white border border-zinc-100 rounded-2xl p-5 mb-6">
             <h2 class="font-semibold mb-2">Equipment</h2>
             <p class="text-zinc-600">
@@ -32,9 +61,35 @@
             </p>
         </div>
 
+        {% if program.recommended_schedule %}
+        <div class="bg-white border border-zinc-100 rounded-2xl p-5 mb-6">
+           <h2 class="font-semibold mb-2">Recommended Schedule</h2>
+           <p class="text-zinc-600 whitespace-pre-line">
+            {{ program.recommended_schedule }}
+           </p>
+        </div>
+{% endif %}
+
         <p class="text-2xl font-semibold mb-6">
             {{ program.price_eur }} €
         </p>
+
+        {% if user.is_authenticated and not has_purchased %}
+            <form method="post" action="{% url 'toggle_wishlist' program.id %}" class="mb-4">
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="border border-zinc-300 px-5 py-2 rounded-xl hover:bg-zinc-100 transition"
+                >
+                    {% if is_favorite %}
+                        ♥ In Wishlist
+                    {% else %}
+                        ♡ Add to Wishlist
+                    {% endif %}
+                </button>
+            </form>
+        {% endif %}
 
         {% if not has_purchased %}
             <form method="post" action="{% url 'create_checkout_session' program.id %}">
@@ -64,17 +119,25 @@
             <div class="bg-white border border-zinc-100 rounded-2xl p-5 flex justify-between items-center">
                 <div>
                     <p class="font-semibold">
-                        {{ video.order }}. {{ video.title }}
+                        {% if video.is_preview %}
+                           Program Preview
+                        {% else %}
+                           {{ video.order }}. {{ video.title }}
+                        {% endif %}
                     </p>
                 </div>
 
-                {% if has_purchased %}
+                {% if has_purchased or video.is_preview %}
                     <a
-                        href="{{ video.video_url }}"
+                        href="{% url 'watch_video' video.id %}"
                         target="_blank"
                         class="bg-black text-white px-4 py-2 rounded-xl hover:bg-zinc-800 transition"
                     >
-                        Watch Video
+                        {% if video.is_preview %}
+                            Watch Preview
+                        {% else %}
+                            Watch Video
+                        {% endif %}
                     </a>
                 {% else %}
                     <span class="text-zinc-500">
@@ -89,6 +152,96 @@
 
         {% endfor %}
     </div>
+
 </section>
+
+<section class="mt-16">
+
+    <h2 class="text-3xl font-bold mb-6">
+        Reviews
+    </h2>
+
+    <div class="space-y-4">
+
+        {% for review in program.reviews.all %}
+
+            <div class="bg-white border border-zinc-100 rounded-2xl p-5">
+
+                <p class="font-semibold mb-2">
+                    Rating: {{ review.rating }}/5
+                </p>
+
+                <p class="text-zinc-600 mb-2">
+                    {{ review.comment }}
+                </p>
+
+                <p class="text-sm text-zinc-400">
+                    {{ review.user.username }}
+                </p>
+
+            </div>
+
+        {% empty %}
+
+            <p class="text-zinc-500">
+                No reviews yet.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% if has_purchased and not user_review_exists %}
+
+<section class="mt-16">
+
+    <h2 class="text-3xl font-bold mb-6">
+        Leave a Review
+    </h2>
+
+    <form method="post" class="bg-white border border-zinc-100 rounded-2xl p-6">
+
+        {% csrf_token %}
+
+        <div class="mb-4">
+            <label class="block mb-2 font-medium">
+                Rating (1-5)
+            </label>
+
+            {{ review_form.rating }}
+        </div>
+
+        <div class="mb-4">
+            <label class="block mb-2 font-medium">
+                Comment
+            </label>
+
+            {{ review_form.comment }}
+        </div>
+
+        <button
+            type="submit"
+            class="bg-black text-white px-6 py-3 rounded-xl hover:bg-zinc-800 transition"
+        >
+            Submit Review
+        </button>
+
+    </form>
+
+</section>
+
+{% elif user_review_exists %}
+
+<section class="mt-16">
+
+    <div class="bg-green-100 text-green-700 rounded-2xl p-4">
+        You have already reviewed this program.
+    </div>
+
+</section>
+
+{% endif %}
 
 {% endblock %}

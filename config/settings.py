@@ -123,5 +123,9 @@ LOGIN_URL = 'login'
 PASSWORD_CHANGE_DONE_URL = 'password_change_done'
 
 import os
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51TlKyUEILzdvzvncwZszaka3mcgb7mVEeBtOUy1HmRFgbfIqE2dPvYOA5YqyziqcuOK88jhpEpjKgrYbjAJsdldK00YHVcavJh'
+
+
+STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+#print("SECRET:", STRIPE_SECRET_KEY)

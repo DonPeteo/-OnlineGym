@@ -39,62 +39,72 @@
 
 <section id="programs">
 
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h2 class="text-3xl font-bold">
-                Featured Programs
-            </h2>
-
-            <p class="text-zinc-500 mt-2">
-                Structured video programs for every fitness level.
-            </p>
-        </div>
-
-    <a
-           href="{% url 'all_programs' %}"
-           class="text-zinc-400 hover:text-zinc-900 transition"
-    >
-           View all ({{ total_programs }})
-     </a>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-        {% for program in programs %}
-
-            <div class="bg-white rounded-2xl shadow-sm border border-zinc-100 overflow-hidden hover:shadow-lg transition">
-
-                <a href="{% url 'program_detail' program.id %}">
-                    <img
-                        src="{{ program.image_url }}"
-                        alt="{{ program.title }}"
-                        class="w-full h-64 object-cover"
-                    >
-                </a>
-
-                <div class="p-5">
-
-                    <h3 class="text-xl font-semibold mb-2">
-                        <a href="{% url 'program_detail' program.id %}">
-                            {{ program.title }}
-                        </a>
-                    </h3>
-
-                    <p class="text-zinc-500">
-                        {{ program.price_eur }} €
-                    </p>
-
-                </div>
-
+        <div class="flex justify-between items-center mb-8">
+    
+            <div>
+                <h2 class="text-3xl font-bold">
+                    Browse Programs
+                </h2>
+    
+                <p class="text-zinc-500 mt-2">
+                    Choose the training style that fits your goals.
+                </p>
             </div>
-
-        {% empty %}
-
-            <p>No programs available.</p>
-
-        {% endfor %}
-
-    </div>
+    
+            <a
+                href="{% url 'all_programs' %}"
+                class="text-zinc-400 hover:text-zinc-900 transition"
+            >
+                View all ({{ total_programs }})
+            </a>
+    
+        </div>
+    
+        <div class="grid md:grid-cols-2 gap-8">
+    
+            <a
+                href="{% url 'home_programs' %}"
+                class="bg-white rounded-3xl overflow-hidden shadow-sm border border-zinc-100 hover:shadow-lg transition"
+            >
+                <img
+                    src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=1200"
+                    alt="Home Workouts"
+                    class="w-full h-80 object-cover"
+                >
+    
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold mb-2">
+                        Home Workouts
+                    </h3>
+    
+                    <p class="text-zinc-500">
+                        Programs designed for training at home with minimal equipment.
+                    </p>
+                </div>
+            </a>
+    
+            <a
+                href="{% url 'gym_programs' %}"
+                class="bg-white rounded-3xl overflow-hidden shadow-sm border border-zinc-100 hover:shadow-lg transition"
+            >
+                <img
+                    src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=1200"
+                    alt="Gym Workouts"
+                    class="w-full h-80 object-cover"
+                >
+    
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold mb-2">
+                        Gym Workouts
+                    </h3>
+    
+                    <p class="text-zinc-500">
+                        Strength and muscle-building programs created for gym training.
+                    </p>
+                </div>
+            </a>
+    
+        </div>
 
 </section>
 

@@ -3,13 +3,60 @@
 {% block content %}
 
 <div class="mb-10">
+
     <h1 class="text-4xl font-bold mb-2">
-        All Programs
+        {{ title|default:"All Programs" }}
     </h1>
 
     <p class="text-zinc-500">
-        Browse all available workout programs.
+        {{ subtitle|default:"Browse all available workout programs." }}
     </p>
+
+
+    {% if show_difficulty_filter %}
+
+<div class="mt-6">
+
+    <p class="text-sm text-zinc-500 mb-3">
+        Choose difficulty
+    </p>
+
+    <div class="flex gap-3 flex-wrap">
+
+        <a href="?difficulty=BEGINNER"
+           class="px-4 py-2 rounded-xl border hover:bg-zinc-100">
+            Beginner
+        </a>
+
+        <a href="?difficulty=INTERMEDIATE"
+           class="px-4 py-2 rounded-xl border hover:bg-zinc-100">
+            Intermediate
+        </a>
+
+        <a href="?difficulty=ADVANCED"
+           class="px-4 py-2 rounded-xl border hover:bg-zinc-100">
+            Advanced
+        </a>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+    {% if current_difficulty %}
+
+    <a
+        href="{% url category_url_name %}"
+        class="inline-block mt-4 text-sm text-zinc-500 hover:text-zinc-900"
+    >
+        ← Back to all {{ title }}
+    </a>
+
+{% endif %}
+
+    
+
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
